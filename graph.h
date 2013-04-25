@@ -1,17 +1,16 @@
 //
 //  graph.h
-//  IsoForcaB
+//  Isomorfismo
 //
-//  Created by Camila Taumaturgo on 24/04/13.
+//  Created by Camila Taumaturgo on 21/04/13.
 //  Copyright (c) 2013 Camila Taumaturgo. All rights reserved.
 //
 
-#ifndef IsoForcaB_graph_h
-#define IsoForcaB_graph_h
+#ifndef _GRAPH_H_
+#define _GRAPH_H_
 
 #include <vector>
 #include <iostream>
-#include <fstream>
 
 template <class T>
 class Vertex;
@@ -25,23 +24,13 @@ class Graph
 {
     
 public:
-	Graph(){}
 	Graph(int _num_nodes, int _num_edges);
-    
-	int getNumberNodes () {return num_nodes;}
     
 	void addEdge (const Vertex<T> & v2, const Vertex<T> & v1,const R & value);
     
 	void removeEdge (const Vertex<T> & v2, const Vertex<T> & v1);
     
 	void addVertex (const Vertex<T> & v);
-    
-	Vertex<T> & getVertex (int index) {return vertexSet[index]; } //return by intex
-    
-    int getAdja(int i, int j){
-        std::cout << adjMatrix[i][j] << std::endl;
-        return(adjMatrix[i][j]);
-    }
     
 	friend std::ostream & operator<< (std::ostream & out, const Graph<T,R> & G) {
         
@@ -58,16 +47,13 @@ public:
 					out << G.vertexSet[i].getLabel();
 					out << "--";
 					out << G.vertexSet[j].getLabel();
-					out << " : " << G.adjMatrix[i][j] << "\n";
+					out << "\n";
 				}
 			}
 		}
         
 		return out;
 	}
-    
-	void xdotFormat ();
-	void xdotToFile (std::string filename);
     
 private:
     
@@ -94,7 +80,6 @@ template <class T, class R>
 void Graph<T,R>::addEdge (const Vertex<T> & v1,
                           const Vertex<T> & v2, const R & value)
 {
-    
 	int i = v1.getIndex();
 	int j = v2.getIndex();
 	adjMatrix[i][j] = value;
@@ -102,7 +87,6 @@ void Graph<T,R>::addEdge (const Vertex<T> & v1,
     
 	addVertex (v1);
 	addVertex (v2);
-    
 }
 
 template <class T, class R>
@@ -113,52 +97,6 @@ void Graph<T,R>::addVertex (const Vertex<T> & v)
 		vertexSet[i] = v;
 	}
 	vertexSet[i].increaseDegree ();
-    
-}
-
-
-template <class T, class R>
-void Graph<T,R>::xdotFormat ()
-{
-	std::cout << "Graph {\n";
-	for (int i=0; i < num_nodes; i++) {
-        for (int j=0; j < i; j++) {
-            if (adjMatrix[i][j] != 0) {
-				std::cout << vertexSet[i].getLabel() << "--";
-				std::cout << vertexSet[j].getLabel();
-                std::cout << " : " << adjMatrix[i][j] << "\n";
-            }
-        }
-	}
-	std::cout << "}\n";
-    
-}
-
-template <class T, class R>
-void Graph<T,R>::xdotToFile (std::string filename)
-{
-    
-	std::ofstream file;
-	file.open (filename.c_str ());
-    
-	if (!file.good ())
-	{
-		std::cout << "Line: " << __LINE__ << " from " << __FILE__ << std::endl;
-	}
-    
-	file << "Graph {\n";
-    for (int i=0; i < num_nodes; i++) {
-        for (int j=0; j < i; j++) {
-            if (adjMatrix[i][j] != 0) {
-                file << vertexSet[i].getLabel() << "--";
-                file << vertexSet[j].getLabel();
-                file << " : " << adjMatrix[i][j] << "\n";
-            }
-        }
-    }
-    file << "}\n";
-    
-	file.close ();
     
 }
 
@@ -184,13 +122,9 @@ public:
     
 	inline int getIndex () const {return index;}
 	inline T getLabel () const {return label;}
-	inline int getDegree()  {return degree;}
     
 	inline void increaseDegree (){degree++;}
 	inline void decreaseDegree (){degree--;}
-	inline void addNeighboor (Vertex<T> v1) {neighboor.push_back (v1);}
-    
-	const std::vector< Vertex<T> > & getNeighboor () { return neighboor; };
     
 	friend std::ostream & operator << (std::ostream & out, const Vertex<T> v) {
         
@@ -202,8 +136,6 @@ public:
         int index;
         T label;
         int degree;
-        
-        std::vector< Vertex<T> > neighboor;
         };
         
         template <class T>
@@ -212,6 +144,5 @@ public:
         {
             label = _label;
         }
-
 
 #endif

@@ -13,6 +13,7 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <vector>
 
 extern int ** mAdjG1;
 extern int ** mAdjG2;
@@ -22,5 +23,10 @@ extern int numArG2;
 
 
 bool readInstance (const char * );
+void Troca(int v[],int i,int j);
+void Gira_Esquerda(int v[],int go, int n);
+void Imprima(int s[], int k);
+void Permuta(int v[], int inicio, int n);
+
 
 #endif
