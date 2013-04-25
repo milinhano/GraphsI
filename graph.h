@@ -1,8 +1,17 @@
-#ifndef _GRAPH_H_
-#define _GRAPH_H_
+//
+//  graph.h
+//  IsoForcaB
+//
+//  Created by Camila Taumaturgo on 24/04/13.
+//  Copyright (c) 2013 Camila Taumaturgo. All rights reserved.
+//
+
+#ifndef IsoForcaB_graph_h
+#define IsoForcaB_graph_h
 
 #include <vector>
 #include <iostream>
+#include <fstream>
 
 template <class T>
 class Vertex;
@@ -16,9 +25,10 @@ class Graph
 {
     
 public:
+	Graph(){}
 	Graph(int _num_nodes, int _num_edges);
     
-	int getNumberNodes (){return num_nodes;}
+	int getNumberNodes () {return num_nodes;}
     
 	void addEdge (const Vertex<T> & v2, const Vertex<T> & v1,const R & value);
     
@@ -27,6 +37,11 @@ public:
 	void addVertex (const Vertex<T> & v);
     
 	Vertex<T> & getVertex (int index) {return vertexSet[index]; } //return by intex
+    
+    int getAdja(int i, int j){
+        std::cout << adjMatrix[i][j] << std::endl;
+        return(adjMatrix[i][j]);
+    }
     
 	friend std::ostream & operator<< (std::ostream & out, const Graph<T,R> & G) {
         
@@ -52,6 +67,7 @@ public:
 	}
     
 	void xdotFormat ();
+	void xdotToFile (std::string filename);
     
 private:
     
@@ -118,6 +134,34 @@ void Graph<T,R>::xdotFormat ()
     
 }
 
+template <class T, class R>
+void Graph<T,R>::xdotToFile (std::string filename)
+{
+    
+	std::ofstream file;
+	file.open (filename.c_str ());
+    
+	if (!file.good ())
+	{
+		std::cout << "Line: " << __LINE__ << " from " << __FILE__ << std::endl;
+	}
+    
+	file << "Graph {\n";
+    for (int i=0; i < num_nodes; i++) {
+        for (int j=0; j < i; j++) {
+            if (adjMatrix[i][j] != 0) {
+                file << vertexSet[i].getLabel() << "--";
+                file << vertexSet[j].getLabel();
+                file << " : " << adjMatrix[i][j] << "\n";
+            }
+        }
+    }
+    file << "}\n";
+    
+	file.close ();
+    
+}
+
 #endif
 
 
@@ -168,5 +212,6 @@ public:
         {
             label = _label;
         }
-        
+
+
 #endif

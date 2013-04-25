@@ -1,87 +1,51 @@
 //
 //  main.cpp
-//  Isomorfismo
+//  IsoForcaB
 //
-//  Created by Camila Taumaturgo on 21/04/13.
+//  Created by Camila Taumaturgo on 24/04/13.
 //  Copyright (c) 2013 Camila Taumaturgo. All rights reserved.
 //
 
 #include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
 #include "graph.h"
-#include "auxiliar.h"
-
-#define PESO 0
-
-/* >>>>>>>>>> GLOBAL VARIABLE DECLARATIONS <<<<<<<<<< */
-
-int ** mAdjG1;
-int ** mAdjG2;
-int numVer; //numero total de vertices -  só iremos testar quando o numero de vertices forem igual
-int numArG1 = 0; //numero de arestas
-int numArG2 = 0; //numero de arestas
-//OBS: Quando o numero de arestas forem diferentes, tb podemos dizer que os grafos naum sao isomorfos
-
-/* ------ END OF GLOBAL VARIABLE DECLARATIONS ------- */
+#include "reader.h"
+#include "algofatorial.h"
 
 using namespace std;
 
 int main(int argc, const char * argv[])
 {
-    
-    //Sera feita a leitura das matrizes de adjacencia
-    //eh necessario ler apenas a matriz inferior a diagonal principal
-    //o nome do arquivo é passado como argumento Ex ./grafo g1
-    
-    if (argc != 2) {
-		cout << "The program could not be initialized due to a parameter error. To execute this program use:" << endl;
-		cout << ".\\graph g1" << endl;
+
+    Graph<int,int> g1(0,0), g2(0,0);
+
+    reader(argv[1], &g1, &g2);
+
+	if (&g1 == NULL || &g2 == NULL) {
+		std::cout << "line " << __LINE__ << "from" << __FILE__ << std::endl;
 		exit (1);
 	}
     
-    bool resp;
+    //Permutacao de n numeros
+    int * s;
+    int N, i;
+    N = g1.getNumberNodes();
+    cout << N << endl;
+    //printf("\nentre com n:");
+    //scanf("%d",&N);
+    s = new int (N);
+    // inicia o vetor
+    for (i=1; i<=N; i++) s[i] = i;
+    Permuta (s, 1, N,&g1,&g2);
+    cout << endl;
     
-	resp = readInstance (argv[1]);
-	if (!resp) {
-		cout << "It was not possible to read the instance file.\nVerify the file and try again.\nThe program will be finished." << endl;
-		exit (1);
+	if (verifyDegree (&g1,&g2)) {
+		cout << "São isomorfos" << endl;
+	} else {
+		cout << "Não São isomorfos" << endl;
 	}
 
-    if(numArG1 != numArG2){
-        cout << "Os grafos naum sao isomorfos. Numero de arestas diferentes." << endl;
-        return true;
-    }
-
-    
-    //Ao construir o grafo seria mais interessante apenas passar o número de vértices
-    Graph<int,double> graph1(numVer,numArG1);
-    Graph<int,double> graph2(numVer,numArG1);
-
-    
-    cout << "-------------GRAPH 1" << endl;
-    for(int i = 0; i < numVer; i++){
-        for(int j = 0; j < numVer; j++){
-            if( j < i ) {
-                if( mAdjG1[i][j] == 1)
-                    graph1.addEdge(Vertex<int>(i,i), Vertex<int>(j,j), 10);
-            }
-            else break;
-        }
-    }
-    cout << graph1 << endl;
-    
-    cout << "-------------GRAPH 2" << endl;
-    for(int i = 0; i < numVer; i++){
-        for(int j = 0; j < numVer; j++){
-            if( j < i ) {
-                if( mAdjG2[i][j] == 1)
-                    graph2.addEdge(Vertex<int>(i,i), Vertex<int>(j,j), 10);
-            }
-            else break;
-        }
-    }
-    cout << graph2 << endl;
-    
-      
     return 0;
 }
 
